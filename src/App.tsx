@@ -257,12 +257,9 @@ export default App;
 /////////////////////////////////////////////////////////////
 // lib.ts
 export type Localized<TProp> = { [key in Locale]: TProp}
-export type Props<P>  = { children: ((props: P) => JSX.Element), style: CSSProperties<string | number> } & P
-export const Component = <P extends { children?: ((props: P) => JSX.Element), style: CSSProperties<string | number> }> (props:P): JSX.Element => {
-	if (props.children){
-		return <props.children {...props} /> 
-	} else{ return <></>}
-} 
+export type Props<P>  = { children: ((props: (P & {style?: CSSProperties<string | number>})) => JSX.Element) } & P
+export const Component = <P extends { children?: ((props: (P & { style?: CSSProperties<string | number>})) => JSX.Element) }> (props:P): JSX.Element => props.children ?  props.children(props) : <></>
+
 
 /////////////////////////////////////////////////////////////
 // props.ts
