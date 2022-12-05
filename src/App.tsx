@@ -2,7 +2,6 @@ import Carousel from "nuka-carousel";
 import React, { useState } from 'react';
 import {AdvancedImage as CloudinaryImg} from '@cloudinary/react';
 import {Cloudinary} from "@cloudinary/url-gen";
-import { Properties as CSSProperties } from 'csstype';
 import styles from "./App.module.scss"
 export type Locale = "en" | "tr" | "gr" | "ru";
 export type AppLocale = {default: Locale, options: Locale[], current?: Locale}
