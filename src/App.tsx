@@ -1,10 +1,9 @@
-import './App.css';
 import Carousel from "nuka-carousel";
 import React, { useState } from 'react';
 import {AdvancedImage as CloudinaryImg} from '@cloudinary/react';
 import {Cloudinary} from "@cloudinary/url-gen";
 import { Properties as CSSProperties } from 'csstype';
-
+import styles from "./App.module.scss"
 export type Locale = "en" | "tr" | "gr" | "ru";
 export type AppLocale = {default: Locale, options: Locale[], current?: Locale}
 export const APP_LOCALE: AppLocale = { default: "en", options: ["en", "tr", "gr", "ru"] }
@@ -19,12 +18,13 @@ function App() {
 	const CDN = new Cloudinary({cloud: {cloudName}});
 
 	return (
-		<div className="App">
-			<Header 
-				{...({...HEADER_PROPS[appLocale.current ?? appLocale.default], style:{border:"solid red"}})} 
-			>
+		<div>
+			<Header {...{
+				style: "header", 
+				...(HEADER_PROPS[appLocale.current ?? appLocale.default]),
+			}}>
 				{(props) => <>
-					<header style={props.style} className="App-header">
+					<header>
 						<div className="logo">
 							<a href="/#">
 								<img src={props.logo.src} alt={props.logo.alt}></img>
@@ -42,7 +42,6 @@ function App() {
 							<div>		
 								<select 
 									onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-										console.log("props", props)
 										setAppLocale(l => ({...l, current: e.target.value as Locale}))
 									}}
 									name="locale" 
@@ -61,16 +60,22 @@ function App() {
 					</header>
 				</>}
 			</Header>
-			<Hero {...HERO_PROPS[appLocale.current ?? appLocale.default]}>
-				{(props)=> <>
-				<Carousel renderCenterLeftControls={() => null} renderCenterRightControls={() => null}>
-					{props.images.map(img => <>
-						<img src={img.src} alt={img.alt}></img>
-					</>)}
-				</Carousel>
+			<Hero {...{
+					style: "hero",
+					...HERO_PROPS[appLocale.current ?? appLocale.default],
+				}}>
+				{(props) => <>
+					<Carousel renderCenterLeftControls={() => null} renderCenterRightControls={() => null}>
+						{props.images.map(img => <>
+							<img src={img.src} alt={img.alt}></img>
+						</>)}
+					</Carousel>
 			</>}
 			</Hero>
-			<Schedule {...(SCHEDULE_PROPS[appLocale.current ?? appLocale.default])}>
+			<Schedule {...{
+				style: "schedule",
+				...(SCHEDULE_PROPS[appLocale.current ?? appLocale.default])
+			}}>
 				{(props) =>  <>
 					<section>
 						<h2>{props.header.text} ({props.header.startDay} - {props.header.endDay} {props.header.month} {props.header.year})</h2>
@@ -96,7 +101,10 @@ function App() {
 					</section>
 				</>}
 			</Schedule>
-			<Accommodation {...(ACCOMMODATION_PROPS[appLocale.current ?? appLocale.default])}>
+			<Accommodation {...{
+				style: "accommodation",
+				...(ACCOMMODATION_PROPS[appLocale.current ?? appLocale.default]),
+			}}>
 				{(props) => <>
 					<section>
 						<div id="accommodation">
@@ -113,7 +121,7 @@ function App() {
 											{props.gallery.map(card => 
 												<div >
 													<a href={card.src}>
-														<CloudinaryImg cldImg={CDN.image(card.src)} alt={card.alt}/>
+														{/* <CloudinaryImg cldImg={CDN.image(card.src)} alt={card.alt}/> */}
 													</a>
 												</div>
 											)}
@@ -163,14 +171,17 @@ function App() {
 					</section>
 				</>}
 			</Accommodation>
-			<Artist {...(ARTIST_PROPS[appLocale.current ?? appLocale.default])}>
+			<Artist {...{
+				style: "artist",
+				...(ARTIST_PROPS[appLocale.current ?? appLocale.default])
+			}}>
 				{(props) => <>
 					<section id="djteam">
 						<div>
 							<h1>{props.header}</h1>
 							{props.cards.map(article => <>
 								<div>
-									<CloudinaryImg cldImg={CDN.image(article.image.src)} alt={article.image.alt}/>
+									{/* <CloudinaryImg cldImg={CDN.image(article.image.src)} alt={article.image.alt}/> */}
 									<span><i>{article.header}</i></span>
 								</div>
 							</>)}
@@ -178,7 +189,10 @@ function App() {
 					</section>
 				</>}
 			</Artist>
-			<Price {...(PRICE_PROPS[appLocale.current ?? appLocale.default])}>
+			<Price {...{
+				style: "price",
+				...(PRICE_PROPS[appLocale.current ?? appLocale.default])
+			}}>
 				{(props) =>  <>
 					<div id="prices">
 						<div>
@@ -219,7 +233,10 @@ function App() {
 					</div>
 				</>}
 			</Price>
-			<Registrar {...(REGISTRAR_PROPS[appLocale.current ?? appLocale.default])}>
+			<Registrar {...{
+				style: "registrar",
+				...(REGISTRAR_PROPS[appLocale.current ?? appLocale.default])
+			}}>
 				{(props) => <>
 				<div id="registration">
 						<div className="container">
@@ -256,10 +273,15 @@ export default App;
 
 /////////////////////////////////////////////////////////////
 // lib.ts
-export type Localized<TProp> = { [key in Locale]: TProp}
-export type Props<P>  = { children: ((props: (P & {style?: CSSProperties<string | number>})) => JSX.Element) } & P
-export const Component = <P extends { children?: ((props: (P & { style?: CSSProperties<string | number>})) => JSX.Element) }> (props:P): JSX.Element => props.children ?  props.children(props) : <></>
-
+export type Localized<P> = { [key in Locale]: P}
+export type Props<P>  = { children: ((props: (P & {style?:string})) => JSX.Element) } & P
+export const Component = <P extends { children?: ((props: (P & { style?: string})) => JSX.Element) }> (props:P & { style?: string}): JSX.Element => {
+	if(props.children){
+		const grandChild: JSX.Element = props.children(props).props.children;
+		return React.cloneElement(grandChild, { className: styles[String(props.style)] })
+	}
+	return <></>
+} 
 
 /////////////////////////////////////////////////////////////
 // props.ts
@@ -994,4 +1016,5 @@ export const REGISTRAR_PROPS: Localized<RegistrarProps> = ({
 		]}
 	} )
 });
+
 
