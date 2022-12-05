@@ -1,28 +1,121 @@
+//  - Display Flex / Inline-flex
+//  - Flex Direction
+//  - Flex Wrap
+//  - Flex Flow
+//  - Justify Content
+//  - Align Items
+//  - Flex Gap
+
 .header {
+  padding: 0 75px 0 75px;
+  position: sticky;
+  top: 0px;
+
     border:solid red;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    
+    & article {
+      padding: 25px;
+      border: solid slateblue;
+      display: flex;
+      flex-grow: 2;
+      justify-content: left;
+    }
+    
+
+    & menu {
+      border: solid burlywood;
+
+      //  TODO: Factor out
+      // menu reset
+      list-style: none;
+      margin: 0;
+      padding:0;
+      padding: 25px;
+
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 40px;
+
+      & nav {
+        display: flex;
+        flex-flow: row wrap;
+        @media (max-width: 605px) {
+          flex-flow: column nowrap;
+        }
+        
+        gap: 40px;
+        align-items: center;
+      }
+
+      & section {
+        @media (max-width: 605px) {
+          flex-flow: column nowrap;
+        }
+
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 40px;
+        justify-content: flex-start;
+        align-items: center;
+
+        & button {
+          // height: auto;
+          @media (min-width: 605px) {
+            display: none;
+          }
+        }
+
+      }
+    }
+    
 }
 
 .hero {
+  padding: 0 75px 0 75px;
+
   border:solid black;
+  display: flex;
+  min-height: 70vh;
+  width: unset !important;
 
 }
+
 .schedule {
+  padding: 0 75px 0 75px;
+
   border:solid orange;
+  display: flex;
 
 }
+
 .accommodation {
+  padding: 0 75px 0 75px;
+
   border:solid pink;
+  display: flex;
 
 }
 .artist {
+  padding: 0 75px 0 75px;
+
   border:solid green;
+  display: flex;
 
 }
 .price {
+  padding: 0 75px 0 75px;
+
   border:solid red;
+  display: flex;
 
 }
-.registrar {
-  border:solid black;
 
+.registrar {
+  padding: 0 75px 0 75px;
+
+  border:solid black;
+  display: flex;
 }

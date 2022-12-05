@@ -11,7 +11,7 @@ function App() {
 	// Language
 	if (!APP_LOCALE.options.includes(APP_LOCALE.default)) throw new Error("Invalid default language configured...");
 	const [appLocale, setAppLocale] = useState<typeof APP_LOCALE>(APP_LOCALE)
-	
+	const [isMenuCollapsed, setIsMenuCollapsed] = useState(true);
 	//  CDN
 	const [cloudName, cloudinaryTag] = ["tango-siempre", "Development"]
 	const CDN = new Cloudinary({cloud: {cloudName}});
@@ -24,12 +24,12 @@ function App() {
 			}}>
 				{(props) => <>
 					<header>
-						<div className="logo">
+						<article>
 							<a href="/#">
-								<img src={props.logo.src} alt={props.logo.alt}></img>
+								<CloudinaryImg cldImg={CDN.image(props.logo.src)} alt={props.logo.alt}></CloudinaryImg>
 							</a>
-						</div>
-						<div>
+						</article>
+						<menu>
 							<nav>
 								{props.sections.map(s => <>
 										<li>
@@ -38,7 +38,10 @@ function App() {
 									</>
 								)}
 							</nav>
-							<div>		
+							<section>
+								<button onClick={() => setIsMenuCollapsed(!isMenuCollapsed)}>
+									≡
+								</button>		
 								<select 
 									onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
 										setAppLocale(l => ({...l, current: e.target.value as Locale}))
@@ -54,8 +57,8 @@ function App() {
 										</option>
 									</>)}				
 								</select>
-							</div>
-						</div>
+							</section>
+						</menu>
 					</header>
 				</>}
 			</Header>
@@ -329,7 +332,7 @@ export const Registrar = (props: (Props<RegistrarProps>)) => Component<typeof pr
 // data.ts
 export const HEADER_PROPS: Localized<HeaderProps> = ({
 	en:{
-		logo: {src: "", alt:"Tango Siempre Logo"},
+		logo: {src: "tango-siempre/siempre-logo", alt:"Siempre Logo"},
 		sections: [
 			{name: "Schedule" },
 			{name: "Hotel" },
@@ -339,7 +342,7 @@ export const HEADER_PROPS: Localized<HeaderProps> = ({
 		],
 	},
 	tr:{
-		logo: {src: "", alt:"Tango Siempre Logo"},
+		logo: {src: "tango-siempre/siempre-logo", alt:"Siempre Logo"},
 		sections: [
 			{name: "Program" },
 			{name: "Hotel" },
@@ -349,7 +352,7 @@ export const HEADER_PROPS: Localized<HeaderProps> = ({
 		],
 	},
 	gr:{
-		logo: {src: "", alt:"Tango Siempre λογότυπο"},
+		logo: {src: "tango-siempre/siempre-logo", alt:"Siempre λογότυπο"},
 		sections: [
 			{name: "πρόγραμμα" },
 			{name: "ξενοδοχειο" },
@@ -359,7 +362,7 @@ export const HEADER_PROPS: Localized<HeaderProps> = ({
 		],
 	},
 	ru:{
-		logo: {src: "", alt:"Tango Siempre логотип"},
+		logo: {src: "tango-siempre/siempre-logo", alt:"Siempre логотип"},
 		sections: [
 			{name: "Программа" },
 			{name: "Отель" },
