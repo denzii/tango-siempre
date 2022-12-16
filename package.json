@@ -12,6 +12,7 @@
     "@types/node": "^16.18.3",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
+    "cloudinary": "^1.32.0",
     "cloudinary-core": "^2.13.0",
     "i": "^0.3.7",
     "node-sass": "^7.0.3",
